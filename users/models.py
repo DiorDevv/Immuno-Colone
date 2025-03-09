@@ -70,3 +70,5 @@ class User(AbstractUser, BaseModel):
             self.check_pass()
             self.hashing_password()
         super().save(*args, **kwargs)
+
+

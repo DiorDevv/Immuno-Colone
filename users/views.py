@@ -4,7 +4,7 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework import generics, permissions
 
 from users.models import User
-from users.serializers import SignUpSerializer, LoginSerializer
+from users.serializers import SignUpSerializer, LoginSerializer, #LoginRefreshSerializer
 
 
 class CreateUserView(CreateAPIView):
@@ -16,3 +16,7 @@ class CreateUserView(CreateAPIView):
 
 class LoginAPIView(TokenObtainPairView):
     serializer_class = LoginSerializer
+#
+#
+# class LoginRefreshView(TokenRefreshView):
+#     serializer_class = LoginRefreshSerializer

@@ -1,11 +1,16 @@
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
 from .models import User, Role
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.generics import get_object_or_404
+from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import gettext_lazy as _
+from django.utils.timezone import now
+import uuid
 
 
 class SignUpSerializer(serializers.ModelSerializer):
@@ -110,3 +115,19 @@ class LoginSerializer(serializers.Serializer):
         data["auth_status"] = self.user.auth_status
         data["role_user"] = self.role_user
         return data
+
+#
+# class LoginRefreshSerializer(TokenRefreshSerializer):
+#     def validate(self, attrs):
+#         data = super().validate(attrs)
+#         access_token_instance = AccessToken(data['access'])
+#
+#         # user_id ni UUID ga aylantirish
+#         try:
+#             user_id = uuid.UUID(str(access_token_instance['user_id']))
+#         except ValueError:
+#             raise serializers.ValidationError("User ID noto‘g‘ri formatda")
+#
+#         user = get_object_or_404(User, id=user_id)
+#         update_last_login(None, user)
+#         return data
