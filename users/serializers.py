@@ -1,16 +1,11 @@
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
 from .models import User, Role
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework.generics import get_object_or_404
-from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import gettext_lazy as _
-from django.utils.timezone import now
-import uuid
+
 
 
 class SignUpSerializer(serializers.ModelSerializer):

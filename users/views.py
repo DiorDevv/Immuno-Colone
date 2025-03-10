@@ -4,7 +4,7 @@ from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework import generics, permissions
 
 from users.models import User
-from users.serializers import SignUpSerializer, LoginSerializer, #LoginRefreshSerializer
+from users.serializers import SignUpSerializer, LoginSerializer #LoginRefreshSerializer
 
 
 class CreateUserView(CreateAPIView):

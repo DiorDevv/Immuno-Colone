@@ -31,10 +31,12 @@ INSTALLED_APPS = [
     #    package
     'rest_framework',
     'rest_framework_simplejwt',
+    'import_export',
 
     #    app
     'users',
     'shared',
+    'bemor',
 ]
 
 MIDDLEWARE = [
@@ -159,7 +161,6 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Asosiy backend
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
