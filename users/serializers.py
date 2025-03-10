@@ -61,7 +61,7 @@ class LoginSerializer(serializers.Serializer):
         password = data.get('password')
 
         user = User.objects.filter(username=username).first()
-
+        print(user)
         if user is None:
             raise ValidationError({
                 'success': False,

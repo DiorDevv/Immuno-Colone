@@ -41,10 +41,10 @@ class OperatsiyaBolganJoy(BaseModel):
 
 class Jinsi(BaseModel):
     GENDER_CHOICES = [
-        ('M', 'Erkak'),
-        ('F', 'Ayol')
+        ('M', 'Male'),
+        ('F', 'Female'),
     ]
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, unique=True)
 
     class Meta:
         verbose_name = "Jinsi"
@@ -98,7 +98,7 @@ class Bemor(BaseModel):
     manzil = models.ForeignKey(Manzil, on_delete=models.SET_NULL, null=True, blank=True)
     bemor_holati = models.ForeignKey(BemorningHolati, on_delete=models.CASCADE, null=True, blank=True)
     operatsiya_bolgan_joy = models.ForeignKey(OperatsiyaBolganJoy, on_delete=models.CASCADE, null=True, blank=True)
-    biriktirilgan_file = models.FileField(upload_to='biriktirilgan/%Y/%m/%d', null=True, blank=True)
+    biriktirilgan_file = models.FileField(upload_to='media/biriktirilgan/%Y/%m/%d', null=True, blank=True)
     qoshimcha_malumotlar = models.TextField(null=True, blank=True)
     arxivga_olingan_sana = models.DateTimeField(null=True, blank=True)
 

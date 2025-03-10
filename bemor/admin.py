@@ -46,11 +46,6 @@ class BemorningHolatiAdmin(ExportMixin, admin.ModelAdmin):
     list_per_page = 20
 
 
-from django.contrib import admin
-from import_export.admin import ExportMixin
-from .models import BemorQoshsih, Bemor
-
-
 @admin.register(BemorQoshsih)
 class BemorQoshsihAdmin(admin.ModelAdmin):
     list_display = ("JSHSHIR", "ism", "familiya", "tugilgan_sana", "jinsi")
