@@ -10,7 +10,7 @@ class JinsiSerializer(serializers.ModelSerializer):
     def validate_gender(self, value):
         value = value.upper()
         if value not in ['M', 'F']:
-            raise serializers.ValidationError("Jins faqat 'M' yoki 'F' bo'lishi mumkin!")
+            raise serializers.ValidationError("Jins faqatt 'M' yoki 'F' bo'lishi mumkin!")
         return value
 
     def create(self, validated_data):
