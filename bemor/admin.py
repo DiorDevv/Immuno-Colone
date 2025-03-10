@@ -1,6 +1,6 @@
 from django.contrib import admin
 from import_export.admin import ExportMixin
-from .models import Manzil, OperatsiyaBolganJoy, Jinsi, BemorningHolati, Bemor, BemorQoshsih
+from .models import Manzil, OperatsiyaBolganJoy, BemorningHolati, Bemor, BemorQoshish
 
 
 class BemorInline(admin.TabularInline):  # Bemorlarni boshqa adminlarda ichki jadval sifatida ko‘rsatish
@@ -30,14 +30,6 @@ class OperatsiyaBolganJoyAdmin(ExportMixin, admin.ModelAdmin):
     list_per_page = 20
 
 
-@admin.register(Jinsi)
-class JinsiAdmin(admin.ModelAdmin):
-    list_display = ('gender',)
-    list_filter = ('gender',)
-    search_fields = ('gender',)
-    ordering = ('gender',)
-
-
 @admin.register(BemorningHolati)
 class BemorningHolatiAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ('holati', 'ozgarish')
@@ -46,9 +38,9 @@ class BemorningHolatiAdmin(ExportMixin, admin.ModelAdmin):
     list_per_page = 20
 
 
-@admin.register(BemorQoshsih)
+@admin.register(BemorQoshish)
 class BemorQoshsihAdmin(admin.ModelAdmin):
-    list_display = ("JSHSHIR", "ism", "familiya", "tugilgan_sana", "jinsi")
+    list_display = ("id","JSHSHIR", "ism", "familiya", "tugilgan_sana", "jinsi")
     search_fields = ("JSHSHIR", "ism", "familiya")
     list_filter = ("jinsi", "tugilgan_sana")
     date_hierarchy = "tugilgan_sana"

@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from shared.models import BaseModel
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+import uuid
 
 User = get_user_model()
 
@@ -39,21 +40,6 @@ class OperatsiyaBolganJoy(BaseModel):
         return self.mamlakat
 
 
-class Jinsi(BaseModel):
-    GENDER_CHOICES = [
-        ('M', 'Male'),
-        ('F', 'Female'),
-    ]
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, unique=True)
-
-    class Meta:
-        verbose_name = "Jinsi"
-        verbose_name_plural = "Jinslar"
-
-    def __str__(self):
-        return self.gender
-
-
 class BemorningHolati(BaseModel):
     holati = models.CharField(max_length=255)
     ozgarish = models.TextField()
@@ -66,7 +52,12 @@ class BemorningHolati(BaseModel):
         return self.holati
 
 
-class BemorQoshsih(BaseModel):
+class BemorQoshish(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+    ]
+
     JSHSHIR = models.CharField(
         max_length=14,
         unique=True,
@@ -80,21 +71,21 @@ class BemorQoshsih(BaseModel):
     ism = models.CharField(max_length=255)
     familiya = models.CharField(max_length=255)
     tugilgan_sana = models.DateField()
-    jinsi = models.ForeignKey(Jinsi, on_delete=models.CASCADE)
+    jinsi = models.CharField(max_length=1, choices=GENDER_CHOICES)
 
     class Meta:
-        verbose_name = "Bemor qo'shish"
-        verbose_name_plural = "Bemorlar qo'shish"
+        verbose_name = "Bemor JSHSHIR"
+        verbose_name_plural = "Bemor Bemor JSHSHIR"
         constraints = [
             models.UniqueConstraint(fields=['ism', 'familiya', 'tugilgan_sana'], name='unique_bemor')
         ]
 
     def __str__(self):
-        return self.JSHSHIR
+        return f"{self.ism} {self.familiya} - {self.JSHSHIR}"
 
 
 class Bemor(BaseModel):
-    bemor = models.ForeignKey(BemorQoshsih, on_delete=models.CASCADE)
+    bemor = models.ForeignKey(BemorQoshish, on_delete=models.CASCADE)
     manzil = models.ForeignKey(Manzil, on_delete=models.SET_NULL, null=True, blank=True)
     bemor_holati = models.ForeignKey(BemorningHolati, on_delete=models.CASCADE, null=True, blank=True)
     operatsiya_bolgan_joy = models.ForeignKey(OperatsiyaBolganJoy, on_delete=models.CASCADE, null=True, blank=True)
