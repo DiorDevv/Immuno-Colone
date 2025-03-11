@@ -1,16 +1,18 @@
 from django.contrib import admin
 from import_export.admin import ExportMixin
+from django.utils.translation import gettext_lazy as _
 from .models import Manzil, OperatsiyaBolganJoy, BemorningHolati, Bemor, BemorQoshish
 
 
-class BemorInline(admin.TabularInline):  # Bemorlarni boshqa adminlarda ichki jadval sifatida ko‘rsatish
+class BemorInline(admin.TabularInline):
+    """Bemorlarni boshqa admin panellarda ichki jadval sifatida ko‘rsatish"""
     model = Bemor
     extra = 1
     autocomplete_fields = ['jinsi', 'manzil', 'bemor_holati']
 
 
 @admin.register(Manzil)
-class ManzilAdmin(ExportMixin, admin.ModelAdmin):  # Export funksiyasi qo‘shildi
+class ManzilAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ('mamlakat', 'hudud', 'tuman', 'mahalla', 'kocha_nomi', 'biriktirilgan_tuman')
     search_fields = ('mamlakat', 'hudud', 'tuman', 'mahalla')
     list_filter = ('mamlakat', 'hudud', 'tuman')
@@ -22,7 +24,8 @@ class ManzilAdmin(ExportMixin, admin.ModelAdmin):  # Export funksiyasi qo‘shil
 class OperatsiyaBolganJoyAdmin(ExportMixin, admin.ModelAdmin):
     list_display = (
         'mamlakat', 'operatsiya_bolgan_joy', 'transplantatsiya_sana', 'operatsiya_oxirlangan_sana',
-        'ishlatilgan_miqdor')
+        'ishlatilgan_miqdor'
+    )
     search_fields = ('mamlakat', 'operatsiya_bolgan_joy')
     list_filter = ('mamlakat', 'transplantatsiya_sana')
     ordering = ('transplantatsiya_sana',)
@@ -39,8 +42,8 @@ class BemorningHolatiAdmin(ExportMixin, admin.ModelAdmin):
 
 
 @admin.register(BemorQoshish)
-class BemorQoshsihAdmin(admin.ModelAdmin):
-    list_display = ("id","JSHSHIR", "ism", "familiya", "tugilgan_sana", "jinsi")
+class BemorQoshishAdmin(admin.ModelAdmin):
+    list_display = ("id", "JSHSHIR", "ism", "familiya", "tugilgan_sana", "jinsi")
     search_fields = ("JSHSHIR", "ism", "familiya")
     list_filter = ("jinsi", "tugilgan_sana")
     date_hierarchy = "tugilgan_sana"
@@ -57,15 +60,16 @@ class BemorAdmin(ExportMixin, admin.ModelAdmin):
     autocomplete_fields = ("bemor", "manzil", "bemor_holati", "operatsiya_bolgan_joy")
     ordering = ("arxivga_olingan_sana",)
     list_per_page = 20
+
     fieldsets = (
-        ("Bemor ma’lumotlari", {
+        (_("Bemor ma’lumotlari"), {
             "fields": ("bemor",)
         }),
-        ("Qo‘shimcha ma’lumotlar", {
+        (_("Qo‘shimcha ma’lumotlar"), {
             "fields": ("manzil", "bemor_holati", "operatsiya_bolgan_joy", "qoshimcha_malumotlar"),
             "classes": ("collapse",)
         }),
-        ("Arxiv", {
+        (_("Arxiv"), {
             "fields": ("arxivga_olingan_sana", "biriktirilgan_file"),
             "classes": ("collapse",)
         }),

@@ -7,9 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import gettext_lazy as _
 
 
-
 class SignUpSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, min_length=6, required=True)
+    password = serializers.CharField(write_only=True, min_length=8, required=True)
     token = serializers.SerializerMethodField()
     role_user = serializers.ChoiceField(choices=Role.choices, required=True)
 
@@ -23,11 +22,6 @@ class SignUpSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Bu username allaqachon mavjud.")
         return value
 
-    def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("Parol kamida 8 ta belgidan iborat bo‘lishi kerak.")
-        return value
-
     def create(self, validated_data):
         if not validated_data.get("username"):
             while True:
@@ -37,11 +31,11 @@ class SignUpSerializer(serializers.ModelSerializer):
                     break
 
         validated_data["password"] = make_password(validated_data["password"])
-        user = super().create(validated_data)
+        user = User.objects.create(**validated_data)
         return user
 
-    def get_token(self, user):
-        refresh = RefreshToken.for_user(user)
+    def get_token(self, obj):
+        refresh = RefreshToken.for_user(obj)
         return {
             "access": str(refresh.access_token),
             "refresh": str(refresh)

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
 from .models import BemorQoshish, Manzil, OperatsiyaBolganJoy
 
 
@@ -9,8 +10,7 @@ class BemorQoshishSerializer(serializers.ModelSerializer):
 
     def validate_JSHSHIR(self, value):
         if not value.isdigit() or len(value) != 14:
-            raise serializers.ValidationError("JSHSHIR faqat 14 ta raqamdan iborat bo‘lishi kerak!")
-
+            raise serializers.ValidationError(_("JSHSHIR faqat 14 ta raqamdan iborat bo‘lishi kerak!"))
         return value
 
     def validate(self, attrs):
@@ -31,7 +31,7 @@ class BemorQoshishSerializer(serializers.ModelSerializer):
 
         if BemorQoshish.objects.filter(ism=ism, familiya=familiya, tugilgan_sana=tugilgan_sana).exists():
             raise serializers.ValidationError(
-                {"detail": "Bunday ism, familiya va tug‘ilgan sanaga ega bemor allaqachon mavjud!"}
+                {"detail": _("Bunday ism, familiya va tug‘ilgan sanaga ega bemor allaqachon mavjud!")}
             )
 
         return attrs
@@ -40,16 +40,16 @@ class BemorQoshishSerializer(serializers.ModelSerializer):
 class ManzilSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manzil
-        fields = "__all__"  # Barcha maydonlarni qo‘shish
+        fields = "__all__"
 
     def validate_mamlakat(self, value):
         if not value.strip():
-            raise serializers.ValidationError("Mamlakat nomi bo‘sh bo‘lishi mumkin emas!")
+            raise serializers.ValidationError(_("Mamlakat nomi bo‘sh bo‘lishi mumkin emas!"))
         return value
 
     def validate_hudud(self, value):
         if len(value) < 3:
-            raise serializers.ValidationError("Hudud nomi kamida 3 ta harfdan iborat bo‘lishi kerak!")
+            raise serializers.ValidationError(_("Hudud nomi kamida 3 ta harfdan iborat bo‘lishi kerak!"))
         return value
 
 
@@ -58,13 +58,10 @@ class OperatsiyaBolganJoySerializer(serializers.ModelSerializer):
         model = OperatsiyaBolganJoy
         fields = '__all__'
 
-    def validate_transplantatsiya_sana(self, value):
-        from datetime import date
-        if value > date.today():
-            raise serializers.ValidationError("Transplantatsiya sanasi kelajakda bo'lishi mumkin emas.")
-        return value
-
-    def validate_ishlatilgan_miqdor(self, value):
-        if value <= 0:
-            raise serializers.ValidationError("Ishlatilgan miqdor 0 dan katta bo‘lishi kerak.")
-        return value
+    def validate(self, data):
+        if data['operatsiya_oxirlangan_sana'] < data['transplantatsiya_sana']:
+            raise serializers.ValidationError({
+                "operatsiya_oxirlangan_sana": _(
+                    "Operatsiya tugash sanasi transplantatsiya sanasidan oldin bo'lishi mumkin emas.")
+            })
+        return data

@@ -1,8 +1,9 @@
 from rest_framework import status, generics, serializers
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from .models import BemorQoshish, Manzil, OperatsiyaBolganJoy
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.utils.translation import gettext_lazy as _
+from .models import BemorQoshish, Manzil, OperatsiyaBolganJoy
 from .serializers import BemorQoshishSerializer, ManzilSerializer, OperatsiyaBolganJoySerializer
 
 
@@ -23,7 +24,7 @@ class BemorQoshishCreateView(CreateAPIView):
 
             return Response(
                 {
-                    "message": "Bemor muvaffaqiyatli qo‘shildi!" if created else "Bemor allaqachon mavjud!",
+                    "message": _("Bemor muvaffaqiyatli qo‘shildi!") if created else _("Bemor allaqachon mavjud!"),
                     "data": {
                         "JSHSHIR": bemor.JSHSHIR,
                         "ism": bemor.ism,
@@ -37,7 +38,7 @@ class BemorQoshishCreateView(CreateAPIView):
 
         return Response(
             {
-                "message": "Xatolik yuz berdi!",
+                "message": _("Xatolik yuz berdi!"),
                 "errors": serializer.errors
             },
             status=status.HTTP_400_BAD_REQUEST
@@ -47,7 +48,7 @@ class BemorQoshishCreateView(CreateAPIView):
 class ManzilListCreateView(generics.ListCreateAPIView):
     queryset = Manzil.objects.all()
     serializer_class = ManzilSerializer
-    permission_classes = [IsAuthenticated]  # Faqat autentifikatsiyadan o‘tgan foydalanuvchilar ishlata oladi
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -57,7 +58,7 @@ class ManzilListCreateView(generics.ListCreateAPIView):
         existing_manzil = Manzil.objects.filter(mamlakat=mamlakat, hudud=hudud).first()
         if existing_manzil:
             return Response(
-                {"message": "Bu manzil allaqachon mavjud!", "data": ManzilSerializer(existing_manzil).data},
+                {"message": _("Bu manzil allaqachon mavjud!"), "data": ManzilSerializer(existing_manzil).data},
                 status=status.HTTP_200_OK
             )
 
@@ -67,11 +68,4 @@ class ManzilListCreateView(generics.ListCreateAPIView):
 class OperatsiyaBolganJoyListCreateView(generics.ListCreateAPIView):
     queryset = OperatsiyaBolganJoy.objects.all()
     serializer_class = OperatsiyaBolganJoySerializer
-    permission_classes = [AllowAny]  # Hamma foydalanishi mumkin
-
-    def perform_create(self, serializer):
-        data = serializer.validated_data
-        if data['operatsiya_oxirlangan_sana'] < data['transplantatsiya_sana']:
-            raise serializers.ValidationError(
-                "Operatsiya tugash sanasi transplantatsiya sanasidan oldin bo'lishi mumkin emas.")
-        serializer.save()
+    permission_classes = [AllowAny]
